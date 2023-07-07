@@ -1,9 +1,16 @@
 #ifndef DATA_TO_TX
 #define DATA_TO_TX
 
-char DataToTx_byte_to_char(int DataToTx_byte_get);
+typedef struct DataToTX
+{
+    void(*send_tx) (void *state, char* tx_buf, size_t tx_buf_lenght);
+    char* tx_buf;
+    size_t tx_buf_lenght;
+    void *send_tx_arg;
+} DataToTX;
 
-void DataToTx_char_to_tx(char tx_char_get, char* tx_message_buf,
-    char id, char* args, size_t args_lenght, char* responce, size_t max_responce_lenght, char* error);
+void DTX_init(DataToTX* converter, 
+    void(*send_tx) (void *state, char* tx_buf, size_t tx_buf_lenght), void *state, char* tx_buf, size_t tx_buf_lenght);
 
+void DTX_write_data(DataToTX* converter, char* buf, size_t lenght);
 #endif
