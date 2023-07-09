@@ -21,6 +21,5 @@ typedef struct DataToTX
 
 void DTX_init(DataToTX* converter, 
     void(*send_tx) (void *state, char* tx_buf, size_t tx_buf_lenght), void *state, char* tx_buf, size_t tx_buf_lenght);
-
 void DTX_write_data(DataToTX* converter, char* buf, size_t lenght);
 #endif
