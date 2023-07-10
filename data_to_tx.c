@@ -218,7 +218,7 @@ void print_tx (void *state, char* tx_buf, size_t tx_buf_lenght)
 void DTX_test(DataToTX* converter, char* test, size_t test_lenght)
 {
     printf("\n\n\nInput: ");
-    for (int i = 0; i <= test_lenght - 2; i++)
+    for (int i = 0; i <= test_lenght - 1; i++)
     {
         printf("%c", test[i]);
     }
@@ -236,9 +236,10 @@ int main ()
 
     //DTX_write_data(&converter, test, sizeof(test));
 
-    char test3[] = {0x32, 0x54, 0x58, 0x32, 0x31, 0x30, 0x30, 0x30}; 
-    char test2[] = {0x20, 0x25, 0x54, 0x58, 0x32, 0x35, 0x39, 0x37, 0x30, 0x33, 0x0D, 0x0A};
-    char test1[] = {0x54, 0x53, 0x32, 0x31, 0x30, 0x30, 0x30, 0x33, 0x0D, 0x0A};
+    char test4[] = {0x32, 0x54, 0x58, 0x32, 0x31, 0x30, 0x30, 0x30}; 
+    char test3[] = {0x20, 0x25, 0x54, 0x58, 0x32, 0x35, 0x39, 0x37, 0x30, 0x33, 0x0D, 0x0A};
+    char test2[] = {0x30, 0x30, 0x33, 0x0D, 0x0A};
+    char test1[] = {0x54, 0x53, 0x32, 0x31, 0x30};
 
     DTX_test(&converter, test1, sizeof(test1));
     DTX_write_data(&converter, test1, sizeof(test1));
@@ -248,4 +249,7 @@ int main ()
 
     DTX_test(&converter, test3, sizeof(test3));
     DTX_write_data(&converter, test3, sizeof(test3));
+
+    DTX_test(&converter, test4, sizeof(test4));
+    DTX_write_data(&converter, test4, sizeof(test4));
 }
