@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include "data_to_tx.h"
-#define getName(var)
 
 #define TX_BUF_MAX_LENGHT 256
 
@@ -21,7 +20,7 @@ static int char_to_int (char char_to_process_0, char char_to_process_1)
                 break;
         }
         
-        switch (CTI_temp_string[0 + j])
+        switch (CTI_temp_string[j])
         {
             case '1':
                 CTI_result = CTI_result + (1 * CTI_temp_multiple);
