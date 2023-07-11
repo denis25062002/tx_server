@@ -72,26 +72,22 @@ static int char_to_int (char char_to_process_0, char char_to_process_1)
     return CTI_result;
 }
 
-static void check_CRC (DataToTX* converter)
+static int check_CRC (DataToTX* converter)
 {
     int CRC_counted = 0;
-    if (converter->tx_buf[1] == 'S')
-    {
+    int CRC_ok = 0;
+    
         for (int i = 0; i < (converter->tx_buf_pointer - 6); i++)
         {
          CRC_counted = CRC_counted ^ converter->tx_buf[i + 2];
         }
 
-        if (CRC_counted == char_to_int (converter->tx_buf[converter->tx_buf_pointer - 4],
+        if (CRC_counted != char_to_int (converter->tx_buf[converter->tx_buf_pointer - 4],
           converter->tx_buf[converter->tx_buf_pointer - 3]))
         {
-          converter->send_tx(converter->send_tx_arg, converter->tx_buf, converter->tx_buf_pointer);
+          CRC_ok = 1;
         }
-    }
-    else if (converter->tx_buf[1] == 'X')
-    {
-        converter->send_tx(converter->send_tx_arg, converter->tx_buf, converter->tx_buf_pointer);
-    }
+    return CRC_ok;
 }
 
 static void switch_to_wait_t(DataToTX* converter)
@@ -174,7 +170,10 @@ static void wait_lf(DataToTX* converter, char byte_to_process)
         write_to_buf(converter, byte_to_process);
         if (converter->send_tx != NULL)
         {
-            check_CRC(converter);
+            if ((converter->tx_buf[1] == 'S') && (check_CRC(converter) == 0) || (converter->tx_buf[1] == 'X'))
+            {
+                converter->send_tx(converter->send_tx_arg, converter->tx_buf, converter->tx_buf_pointer);
+            }
         }
     }
     switch_to_wait_t(converter);

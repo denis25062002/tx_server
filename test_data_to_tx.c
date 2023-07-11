@@ -38,8 +38,65 @@ TEST_RESULT simple_test()
 
 TEST_RESULT CRC_err_test()
 {
-    char test[] = {0x20, 0x25, 0x54, 0x58, 0x32, 0x35, 0x39, 0x37, 0x30, 0x33, 0x0D, 0x0A};
+    char test[] = {0x20, 0x25, 0x54, 0x53, 0x32, 0x35, 0x39, 0x37, 0x30, 0x33, 0x0D, 0x0A};
+    char test_result[] = "TS259709\r\n"; 
+    DataToTX converter;
+    char test_buf[100];
+    char tx_buf[100];
+    DTX_init(&converter, send_tx_test, test_buf, tx_buf, 100);
+    DTX_write_data(&converter, test, sizeof(test));
+    for (int i = 0; i < sizeof(test_result) - 1; i++)
+    {
+        if (test_result[i] != tx_buf[i])
+        {
+            return(FAILED);
+        }
+    } 
+    return(OK);
+}
+
+TEST_RESULT CRC_ok_test()
+{
+    char test[] = {0x20, 0x25, 0x54, 0x53, 0x32, 0x35, 0x39, 0x37, 0x30, 0x39, 0x0D, 0x0A};
+    char test_result[] = "TS259709\r\n"; 
+    DataToTX converter;
+    char test_buf[100];
+    char tx_buf[100];
+    DTX_init(&converter, send_tx_test, test_buf, tx_buf, 100);
+    DTX_write_data(&converter, test, sizeof(test));
+    for (int i = 0; i < sizeof(test_result) - 1; i++)
+    {
+        if (test_result[i] != tx_buf[i])
+        {
+            return(FAILED);
+        }
+    } 
+    return(OK);
+}
+
+TEST_RESULT multiple_commands_test()
+{
+    char test[] = {0x20, 0x25, 0x54, 0x58, 0x32, 0x35, 0x39, 0x37, 0x30, 0x33, 0x0D, 0x0A, 0x54, 0x58, 0x32, 0x35, 0x39, 0x37, 0x30, 0x33, 0x0D, 0x0A};
     char test_result[] = "TX259703\r\n"; 
+    DataToTX converter;
+    char test_buf[100];
+    char tx_buf[100];
+    DTX_init(&converter, send_tx_test, test_buf, tx_buf, 100);
+    DTX_write_data(&converter, test, sizeof(test));
+    for (int i = 0; i < sizeof(test_result) - 1; i++)
+    {
+        if (test_result[i] != tx_buf[i])
+        {
+            return(FAILED);
+        }
+    } 
+    return(OK);
+}
+
+TEST_RESULT incomplete_test()
+{
+    char test[] = {0x20, 0x25, 0x54, 0x58, 0x32, 0x39, 0x37, 0x30, 0x33, 0x0D};
+    char test_result[] = ""; 
     DataToTX converter;
     char test_buf[100];
     char tx_buf[100];
@@ -58,4 +115,8 @@ TEST_RESULT CRC_err_test()
 void main ()
 {
     assert(simple_test() == OK);
+    assert(CRC_err_test() == FAILED);
+    assert(CRC_ok_test() == OK);
+    assert(multiple_commands_test() == OK);
+    assert(incomplete_test() == OK);
 }
