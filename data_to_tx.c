@@ -3,6 +3,12 @@
 
 #define TX_BUF_MAX_LENGHT 256
 
+typedef enum ERR
+{
+    NO_ERR = 0,
+    BUFF_OVERFLOW = 1,
+} ERR;
+
 static int char_to_int (char char_to_process_0, char char_to_process_1)
 {
     int CTI_result = 0;
@@ -96,15 +102,15 @@ static void switch_to_wait_t(DataToTX* converter)
     converter->tx_buf_pointer = 0;
 }
 
-static void write_to_buf (DataToTX* converter, char byte_to_process)
+static int write_to_buf (DataToTX* converter, char byte_to_process)
 {
-    if (converter->tx_buf_pointer >= TX_BUF_MAX_LENGHT)
+    if (converter->tx_buf_pointer >= converter->tx_buf_lenght)
     {
-        switch_to_wait_t(converter);
-        return;
+        return(BUFF_OVERFLOW);
     }
     converter->tx_buf[converter->tx_buf_pointer] = byte_to_process;
     converter->tx_buf_pointer++;
+    return(NO_ERR);
 }
 
 void DTX_init(DataToTX* converter, 
@@ -117,43 +123,64 @@ void DTX_init(DataToTX* converter,
     switch_to_wait_t(converter);
 }   
 
-static void wait_t(DataToTX* converter, char byte_to_process)
+static ERR wait_t(DataToTX* converter, char byte_to_process)
 {
+    ERR err = NO_ERR;
     for (size_t i = 0; i < sizeof(converter->tx_buf); i++)
     {
         converter->tx_buf[i] = 0x00;
     }
     if (byte_to_process == 'T') 
     {
-        write_to_buf(converter, byte_to_process);
+        err = write_to_buf(converter, byte_to_process);
+        if (err)
+        {
+            return(err);
+        }
         converter->state = WAIT_XS;
     }
+    return(err);
 }
 
-static void wait_xs(DataToTX* converter, char byte_to_process)
+static ERR wait_xs(DataToTX* converter, char byte_to_process)
 {
+    ERR err = NO_ERR;
     if ((byte_to_process == 'X') || (byte_to_process == 'S'))
     {
-        write_to_buf(converter, byte_to_process);
+        err = write_to_buf(converter, byte_to_process);
+        if (err)
+        {
+            return(err);
+        }
         converter->state = COPY_PAYLOAD;
     }
     else 
     {
         switch_to_wait_t(converter);
     }
+    return(err);
 }
 
-static void copy_payload(DataToTX* converter, char byte_to_process)
+static ERR copy_payload(DataToTX* converter, char byte_to_process)
 {
+    ERR err = NO_ERR;
     if (((byte_to_process >= 0x30) && (byte_to_process <= 0x39)) ||
         ((byte_to_process >= 0x41) && (byte_to_process <= 0x46)))
     {
-        write_to_buf(converter, byte_to_process);
+        err = write_to_buf(converter, byte_to_process);
+        if (err)
+        {
+            return(err);
+        }
     }
 
     else if (byte_to_process == 0x0D)
     {
-        write_to_buf(converter, byte_to_process);
+        err = write_to_buf(converter, byte_to_process);
+        if (err)
+        {
+            return(err);
+        }
         converter->state = WAIT_LF;
     }
 
@@ -161,13 +188,19 @@ static void copy_payload(DataToTX* converter, char byte_to_process)
     {
         switch_to_wait_t(converter);
     }
+    return(err);
 }
 
-static void wait_lf(DataToTX* converter, char byte_to_process)
+static ERR wait_lf(DataToTX* converter, char byte_to_process)
 {
+    ERR err = NO_ERR;
     if (byte_to_process == 0x0A)
     {
-        write_to_buf(converter, byte_to_process);
+        err = write_to_buf(converter, byte_to_process);
+        if (err)
+        {
+            return(err);
+        }
         if (converter->send_tx != NULL)
         {
             if ((converter->tx_buf[1] == 'S') && (check_CRC(converter) == 0) || (converter->tx_buf[1] == 'X'))
@@ -177,24 +210,30 @@ static void wait_lf(DataToTX* converter, char byte_to_process)
         }
     }
     switch_to_wait_t(converter);
+    return(err);
 }
 
 static void process_byte (DataToTX* converter, char byte_to_process)
 {
+    ERR err = NO_ERR;
     switch (converter->state)
     {
         case WAIT_T:
-            wait_t(converter, byte_to_process);
+            err = wait_t(converter, byte_to_process);
             break;
         case WAIT_XS:
-            wait_xs(converter, byte_to_process);
+            err = wait_xs(converter, byte_to_process);
             break;
         case COPY_PAYLOAD:
-            copy_payload(converter, byte_to_process);
+            err = copy_payload(converter, byte_to_process);
             break;
         case WAIT_LF:
-            wait_lf(converter, byte_to_process);
+            err = wait_lf(converter, byte_to_process);
             break;
+    }
+    if (err)
+    {
+        switch_to_wait_t(converter);
     }
 }
 
