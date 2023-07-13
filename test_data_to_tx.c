@@ -167,10 +167,11 @@ void TTS_test_ts_no_data()
     char tts_ad[2];
     char tts_id[2];
     char tts_data[TEST_BUF_MAX_LENGHT - 8];
-    size_t tts_data_size = 0;
+    size_t tts_data_lenght = 0;
     size_t tts_message_lenght = sizeof(test);
+    int tts_need_crc = 0;
     txstructure txstruct;
-    TTS_init(&txstruct, tts_message, tts_ad, tts_id, tts_data, tts_data_size, tts_message_lenght);
+    TTS_init(&txstruct, tts_message, tts_ad, tts_id, tts_data, tts_data_lenght, tts_message_lenght, tts_need_crc);
     TTS_process_message(&txstruct, test, tts_message_lenght);
     TTS_print_structure(&txstruct);
 }
@@ -182,10 +183,11 @@ void TTS_test_ts_with_data()
     char tts_ad[2];
     char tts_id[2];
     char tts_data[TEST_BUF_MAX_LENGHT - 8];
-    size_t tts_data_size = 0;
+    size_t tts_data_lenght = 0;
     size_t tts_message_lenght = sizeof(test);
+    int tts_need_crc = 0;
     txstructure txstruct;
-    TTS_init(&txstruct, tts_message, tts_ad, tts_id, tts_data, tts_data_size, tts_message_lenght);
+    TTS_init(&txstruct, tts_message, tts_ad, tts_id, tts_data, tts_data_lenght, tts_message_lenght, tts_need_crc);
     TTS_process_message(&txstruct, test, tts_message_lenght);
     TTS_print_structure(&txstruct);
 }
@@ -197,10 +199,11 @@ void TTS_test_tx_no_data()
     char tts_ad[2];
     char tts_id[2];
     char tts_data[TEST_BUF_MAX_LENGHT - 8];
-    size_t tts_data_size = 0;
+    size_t tts_data_lenght = 0;
     size_t tts_message_lenght = sizeof(test);
+    int tts_need_crc = 0;
     txstructure txstruct;
-    TTS_init(&txstruct, tts_message, tts_ad, tts_id, tts_data, tts_data_size, tts_message_lenght);
+    TTS_init(&txstruct, tts_message, tts_ad, tts_id, tts_data, tts_data_lenght, tts_message_lenght, tts_need_crc);
     TTS_process_message(&txstruct, test, tts_message_lenght);
     TTS_print_structure(&txstruct);
 }
@@ -212,25 +215,94 @@ void TTS_test_tx_with_data()
     char tts_ad[2];
     char tts_id[2];
     char tts_data[TEST_BUF_MAX_LENGHT - 8];
-    size_t tts_data_size = 0;
+    size_t tts_data_lenght = 0;
     size_t tts_message_lenght = sizeof(test);
+    int tts_need_crc = 0;
     txstructure txstruct;
-    TTS_init(&txstruct, tts_message, tts_ad, tts_id, tts_data, tts_data_size, tts_message_lenght);
+    TTS_init(&txstruct, tts_message, tts_ad, tts_id, tts_data, tts_data_lenght, tts_message_lenght, tts_need_crc);
     TTS_process_message(&txstruct, test, tts_message_lenght);
+    TTS_print_structure(&txstruct);
+}
+
+void TTS_test_structure_to_message_tx_with_data()
+{
+    char tts_message[TEST_BUF_MAX_LENGHT];
+    char tts_ad[2] = "25";
+    char tts_id[2] = "97";
+    char tts_data[TEST_BUF_MAX_LENGHT - 8] = "456789";
+    size_t tts_data_lenght = 6;
+    size_t tts_message_lenght = 0;
+    int tts_need_crc = 0;
+    txstructure txstruct;
+    TTS_init(&txstruct, tts_message, tts_ad, tts_id, tts_data, tts_data_lenght, tts_message_lenght, tts_need_crc);
+    TTS_process_structure(&txstruct, tts_ad, tts_id, tts_data, tts_data_lenght, tts_need_crc);
+    TTS_print_structure(&txstruct);
+}
+
+void TTS_test_structure_to_message_ts_with_data()
+{
+    char tts_message[TEST_BUF_MAX_LENGHT];
+    char tts_ad[2] = "25";
+    char tts_id[2] = "97";
+    char tts_data[TEST_BUF_MAX_LENGHT - 8] = "123E";
+    size_t tts_data_lenght = 4;
+    size_t tts_message_lenght = 0;
+    int tts_need_crc = 1;
+    txstructure txstruct;
+    TTS_init(&txstruct, tts_message, tts_ad, tts_id, tts_data, tts_data_lenght, tts_message_lenght, tts_need_crc);
+    TTS_process_structure(&txstruct, tts_ad, tts_id, tts_data, tts_data_lenght, tts_need_crc);
+    TTS_print_structure(&txstruct);
+}
+
+void TTS_test_structure_to_message_tx_no_data()
+{
+    char tts_message[TEST_BUF_MAX_LENGHT];
+    char tts_ad[2] = "12";
+    char tts_id[2] = "34";
+    char tts_data[TEST_BUF_MAX_LENGHT - 8];
+    size_t tts_data_lenght = 0;
+    size_t tts_message_lenght = 0;
+    int tts_need_crc = 0;
+    txstructure txstruct;
+    TTS_init(&txstruct, tts_message, tts_ad, tts_id, tts_data, tts_data_lenght, tts_message_lenght, tts_need_crc);
+    TTS_process_structure(&txstruct, tts_ad, tts_id, tts_data, tts_data_lenght, tts_need_crc);
+    TTS_print_structure(&txstruct);
+}
+
+void TTS_test_structure_to_message_ts_no_data()
+{
+    char tts_message[TEST_BUF_MAX_LENGHT];
+    char tts_ad[2] = "25";
+    char tts_id[2] = "97";
+    char tts_data[TEST_BUF_MAX_LENGHT - 8];
+    size_t tts_data_lenght = 0;
+    size_t tts_message_lenght = 0;
+    int tts_need_crc = 1;
+    txstructure txstruct;
+    TTS_init(&txstruct, tts_message, tts_ad, tts_id, tts_data, tts_data_lenght, tts_message_lenght, tts_need_crc);
+    TTS_process_structure(&txstruct, tts_ad, tts_id, tts_data, tts_data_lenght, tts_need_crc);
     TTS_print_structure(&txstruct);
 }
 
 void main ()
 {
+    printf("\e[1;1H\e[2J");
     assert(simple_test() == OK);
     assert(CRC_err_test() == FAILED);
     assert(CRC_ok_test() == OK);
     assert(multiple_commands_test() == OK);
     assert(incomplete_test() == OK);
     assert(overload_test() == OK);
-    printf("Tests for TTS:");
+
+    printf("Tests for TTS: ");
     TTS_test_ts_no_data();
     TTS_test_ts_with_data();
     TTS_test_tx_no_data();
     TTS_test_tx_with_data();
+
+    printf("\n\n\nTests for STT: \n");
+    TTS_test_structure_to_message_ts_no_data();
+    TTS_test_structure_to_message_ts_with_data();
+    TTS_test_structure_to_message_tx_no_data();
+    TTS_test_structure_to_message_tx_with_data();
 }
