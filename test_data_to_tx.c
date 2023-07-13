@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <assert.h>
 #include "data_to_tx.h"
+#include "tx_to_structure.h"
 
 #define TEST_BUF_MAX_LENGHT 256
 
@@ -159,6 +160,66 @@ TEST_RESULT overload_test()
     return(FAILED);
 }
 
+void TTS_test_ts_no_data()
+{
+    char test[] = {0x54, 0x53, 0x32, 0x35, 0x39, 0x37, 0x30, 0x39, 0x0D, 0x0A};
+    char tts_message[TEST_BUF_MAX_LENGHT];
+    char tts_ad[2];
+    char tts_id[2];
+    char tts_data[TEST_BUF_MAX_LENGHT - 8];
+    size_t tts_data_size = 0;
+    size_t tts_message_lenght = sizeof(test);
+    txstructure txstruct;
+    TTS_init(&txstruct, tts_message, tts_ad, tts_id, tts_data, tts_data_size, tts_message_lenght);
+    TTS_process_message(&txstruct, test, tts_message_lenght);
+    TTS_print_structure(&txstruct);
+}
+
+void TTS_test_ts_with_data()
+{
+    char test[] = {0x54, 0x53, 0x32, 0x35, 0x39, 0x37, 0x31, 0x32, 0x33, 0x34, 0x30, 0x44, 0x0D, 0x0A};
+    char tts_message[TEST_BUF_MAX_LENGHT];
+    char tts_ad[2];
+    char tts_id[2];
+    char tts_data[TEST_BUF_MAX_LENGHT - 8];
+    size_t tts_data_size = 0;
+    size_t tts_message_lenght = sizeof(test);
+    txstructure txstruct;
+    TTS_init(&txstruct, tts_message, tts_ad, tts_id, tts_data, tts_data_size, tts_message_lenght);
+    TTS_process_message(&txstruct, test, tts_message_lenght);
+    TTS_print_structure(&txstruct);
+}
+
+void TTS_test_tx_no_data()
+{
+    char test[] = {0x54, 0x58, 0x31, 0x32, 0x33, 0x34, 0x0D, 0x0A};
+    char tts_message[TEST_BUF_MAX_LENGHT];
+    char tts_ad[2];
+    char tts_id[2];
+    char tts_data[TEST_BUF_MAX_LENGHT - 8];
+    size_t tts_data_size = 0;
+    size_t tts_message_lenght = sizeof(test);
+    txstructure txstruct;
+    TTS_init(&txstruct, tts_message, tts_ad, tts_id, tts_data, tts_data_size, tts_message_lenght);
+    TTS_process_message(&txstruct, test, tts_message_lenght);
+    TTS_print_structure(&txstruct);
+}
+
+void TTS_test_tx_with_data()
+{
+    char test[] = {0x54, 0x58, 0x32, 0x35, 0x39, 0x37, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x0D, 0x0A};
+    char tts_message[TEST_BUF_MAX_LENGHT];
+    char tts_ad[2];
+    char tts_id[2];
+    char tts_data[TEST_BUF_MAX_LENGHT - 8];
+    size_t tts_data_size = 0;
+    size_t tts_message_lenght = sizeof(test);
+    txstructure txstruct;
+    TTS_init(&txstruct, tts_message, tts_ad, tts_id, tts_data, tts_data_size, tts_message_lenght);
+    TTS_process_message(&txstruct, test, tts_message_lenght);
+    TTS_print_structure(&txstruct);
+}
+
 void main ()
 {
     assert(simple_test() == OK);
@@ -167,4 +228,9 @@ void main ()
     assert(multiple_commands_test() == OK);
     assert(incomplete_test() == OK);
     assert(overload_test() == OK);
+    printf("Tests for TTS:");
+    TTS_test_ts_no_data();
+    TTS_test_ts_with_data();
+    TTS_test_tx_no_data();
+    TTS_test_tx_with_data();
 }
