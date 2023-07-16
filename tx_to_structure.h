@@ -3,18 +3,21 @@
 
 typedef struct txstructure
 {
-    char* tts_message;
-    char* tts_ad;
-    char* tts_id;
-    char* tts_data;
+    unsigned char tts_ad, tts_id;
+    unsigned char* tts_data;
     size_t tts_data_lenght;
-    size_t tts_message_lenght;
-    int tts_need_crc;
 } txstructure;
 
+typedef struct message
+{
+    char* buf;
+    size_t buf_lenght;
+} message;
+
 void TTS_init(txstructure* txstruct,
-    char* tts_message, char* tts_ad, char* tts_id, char* tts_data, size_t tts_data_lenght, size_t tts_message_lenght, int tts_need_crc);
+     unsigned char tts_ad, unsigned char tts_id, unsigned char* tts_data, size_t tts_data_lenght);
+void TTS_message_init(message* msg, char* buf, size_t buf_lenght);
 void TTS_process_message(txstructure* txstruct, char* buf, size_t lenght);
-void TTS_process_structure(txstructure* txstruct, char* stt_ad, char* stt_id, char* stt_data, size_t stt_data_lenght, int tts_need_crc);
-void TTS_print_structure(txstructure* txstruct);
+void TTS_process_structure(txstructure* txstruct, message* msg, int need_crc);
+unsigned char TTS_code(char byte_1, char byte_2);
 #endif

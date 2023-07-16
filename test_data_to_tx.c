@@ -163,126 +163,218 @@ TEST_RESULT overload_test()
 void TTS_test_ts_no_data()
 {
     char test[] = {0x54, 0x53, 0x32, 0x35, 0x39, 0x37, 0x30, 0x39, 0x0D, 0x0A};
-    char tts_message[TEST_BUF_MAX_LENGHT];
-    char tts_ad[2];
-    char tts_id[2];
-    char tts_data[TEST_BUF_MAX_LENGHT - 8];
-    size_t tts_data_lenght = 0;
-    size_t tts_message_lenght = sizeof(test);
-    int tts_need_crc = 0;
     txstructure txstruct;
-    TTS_init(&txstruct, tts_message, tts_ad, tts_id, tts_data, tts_data_lenght, tts_message_lenght, tts_need_crc);
-    TTS_process_message(&txstruct, test, tts_message_lenght);
-    TTS_print_structure(&txstruct);
+    unsigned char tts_ad;
+    unsigned char tts_id;
+    unsigned char tts_data[TEST_BUF_MAX_LENGHT];
+    size_t tts_data_lenght = 0;
+    TTS_init(&txstruct, tts_ad, tts_id, tts_data, tts_data_lenght);
+    TTS_process_message(&txstruct, test, sizeof(test));
+    printf("\n\n\nInput message: ");
+    for (int i = 0; i < sizeof(test); i++)
+    {
+        printf("%c", test[i]);
+    }
+    printf("\nMessage lenght: %d", sizeof(test));
+    printf("\nAD: %X %X\nAD coded: %X", test[2], test[3], txstruct.tts_ad);
+    printf("\nID: %X %X\nID coded: %X", test[4], test[5], txstruct.tts_id);
+    printf("\nData lenght: %d", txstruct.tts_data_lenght);
 }
 
 void TTS_test_ts_with_data()
 {
-    char test[] = {0x54, 0x53, 0x32, 0x35, 0x39, 0x37, 0x31, 0x32, 0x33, 0x34, 0x30, 0x44, 0x0D, 0x0A};
-    char tts_message[TEST_BUF_MAX_LENGHT];
-    char tts_ad[2];
-    char tts_id[2];
-    char tts_data[TEST_BUF_MAX_LENGHT - 8];
-    size_t tts_data_lenght = 0;
-    size_t tts_message_lenght = sizeof(test);
-    int tts_need_crc = 0;
+    char test[] = {0x54, 0x53, 0x32, 0x35, 0x39, 0x37, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x30, 0x34, 0x0D, 0x0A};
     txstructure txstruct;
-    TTS_init(&txstruct, tts_message, tts_ad, tts_id, tts_data, tts_data_lenght, tts_message_lenght, tts_need_crc);
-    TTS_process_message(&txstruct, test, tts_message_lenght);
-    TTS_print_structure(&txstruct);
+    unsigned char tts_ad;
+    unsigned char tts_id;
+    unsigned char tts_data[TEST_BUF_MAX_LENGHT];
+    size_t tts_data_lenght = 0;
+    TTS_init(&txstruct, tts_ad, tts_id, tts_data, tts_data_lenght);
+    TTS_process_message(&txstruct, test, sizeof(test));
+    printf("\n\n\nInput message: ");
+    for (int i = 0; i < sizeof(test); i++)
+    {
+        printf("%c", test[i]);
+    }
+    printf("\nMessage lenght: %d", sizeof(test));
+    printf("\nAD: %X %X\nAD coded: %X", test[2], test[3], txstruct.tts_ad);
+    printf("\nID: %X %X\nID coded: %X", test[4], test[5], txstruct.tts_id);
+    printf("\nData:");
+    for (int i = 0; i < (txstruct.tts_data_lenght * 2); i++)
+    {
+        printf(" %X", test[i + 6]);
+    }
+    printf("\nData coded:");
+    for (int i = 0; i < txstruct.tts_data_lenght; i++)
+    {
+        printf(" %X", txstruct.tts_data[i]);
+    }
+    printf("\nData lenght: %d", txstruct.tts_data_lenght);
 }
 
 void TTS_test_tx_no_data()
 {
     char test[] = {0x54, 0x58, 0x31, 0x32, 0x33, 0x34, 0x0D, 0x0A};
-    char tts_message[TEST_BUF_MAX_LENGHT];
-    char tts_ad[2];
-    char tts_id[2];
-    char tts_data[TEST_BUF_MAX_LENGHT - 8];
-    size_t tts_data_lenght = 0;
-    size_t tts_message_lenght = sizeof(test);
-    int tts_need_crc = 0;
     txstructure txstruct;
-    TTS_init(&txstruct, tts_message, tts_ad, tts_id, tts_data, tts_data_lenght, tts_message_lenght, tts_need_crc);
-    TTS_process_message(&txstruct, test, tts_message_lenght);
-    TTS_print_structure(&txstruct);
+    unsigned char tts_ad;
+    unsigned char tts_id;
+    unsigned char tts_data[TEST_BUF_MAX_LENGHT];
+    size_t tts_data_lenght = 0;
+    TTS_init(&txstruct, tts_ad, tts_id, tts_data, tts_data_lenght);
+    TTS_process_message(&txstruct, test, sizeof(test));
+    printf("\n\n\nInput message: ");
+    for (int i = 0; i < sizeof(test); i++)
+    {
+        printf("%c", test[i]);
+    }
+    printf("\nMessage lenght: %d", sizeof(test));
+    printf("\nAD: %X %X\nAD coded: %X", test[2], test[3], txstruct.tts_ad);
+    printf("\nID: %X %X\nID coded: %X", test[4], test[5], txstruct.tts_id);
+    printf("\nData lenght: %d", txstruct.tts_data_lenght);
 }
 
 void TTS_test_tx_with_data()
 {
     char test[] = {0x54, 0x58, 0x32, 0x35, 0x39, 0x37, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x0D, 0x0A};
-    char tts_message[TEST_BUF_MAX_LENGHT];
-    char tts_ad[2];
-    char tts_id[2];
-    char tts_data[TEST_BUF_MAX_LENGHT - 8];
+    txstructure txstruct;
+    unsigned char tts_ad;
+    unsigned char tts_id;
+    unsigned char tts_data[TEST_BUF_MAX_LENGHT];
     size_t tts_data_lenght = 0;
-    size_t tts_message_lenght = sizeof(test);
-    int tts_need_crc = 0;
-    txstructure txstruct;
-    TTS_init(&txstruct, tts_message, tts_ad, tts_id, tts_data, tts_data_lenght, tts_message_lenght, tts_need_crc);
-    TTS_process_message(&txstruct, test, tts_message_lenght);
-    TTS_print_structure(&txstruct);
-}
-
-void TTS_test_structure_to_message_tx_with_data()
-{
-    char tts_message[TEST_BUF_MAX_LENGHT];
-    char tts_ad[2] = "25";
-    char tts_id[2] = "97";
-    char tts_data[TEST_BUF_MAX_LENGHT - 8] = "456789";
-    size_t tts_data_lenght = 6;
-    size_t tts_message_lenght = 0;
-    int tts_need_crc = 0;
-    txstructure txstruct;
-    TTS_init(&txstruct, tts_message, tts_ad, tts_id, tts_data, tts_data_lenght, tts_message_lenght, tts_need_crc);
-    TTS_process_structure(&txstruct, tts_ad, tts_id, tts_data, tts_data_lenght, tts_need_crc);
-    TTS_print_structure(&txstruct);
-}
-
-void TTS_test_structure_to_message_ts_with_data()
-{
-    char tts_message[TEST_BUF_MAX_LENGHT];
-    char tts_ad[2] = "25";
-    char tts_id[2] = "97";
-    char tts_data[TEST_BUF_MAX_LENGHT - 8] = "123E";
-    size_t tts_data_lenght = 4;
-    size_t tts_message_lenght = 0;
-    int tts_need_crc = 1;
-    txstructure txstruct;
-    TTS_init(&txstruct, tts_message, tts_ad, tts_id, tts_data, tts_data_lenght, tts_message_lenght, tts_need_crc);
-    TTS_process_structure(&txstruct, tts_ad, tts_id, tts_data, tts_data_lenght, tts_need_crc);
-    TTS_print_structure(&txstruct);
-}
-
-void TTS_test_structure_to_message_tx_no_data()
-{
-    char tts_message[TEST_BUF_MAX_LENGHT];
-    char tts_ad[2] = "12";
-    char tts_id[2] = "34";
-    char tts_data[TEST_BUF_MAX_LENGHT - 8];
-    size_t tts_data_lenght = 0;
-    size_t tts_message_lenght = 0;
-    int tts_need_crc = 0;
-    txstructure txstruct;
-    TTS_init(&txstruct, tts_message, tts_ad, tts_id, tts_data, tts_data_lenght, tts_message_lenght, tts_need_crc);
-    TTS_process_structure(&txstruct, tts_ad, tts_id, tts_data, tts_data_lenght, tts_need_crc);
-    TTS_print_structure(&txstruct);
+    TTS_init(&txstruct, tts_ad, tts_id, tts_data, tts_data_lenght);
+    TTS_process_message(&txstruct, test, sizeof(test));
+    printf("\n\n\nInput message: ");
+    for (int i = 0; i < sizeof(test); i++)
+    {
+        printf("%c", test[i]);
+    }
+    printf("\nMessage lenght: %d", sizeof(test));
+    printf("\nAD: %X %X\nAD coded: %X", test[2], test[3], txstruct.tts_ad);
+    printf("\nID: %X %X\nID coded: %X", test[4], test[5], txstruct.tts_id);
+    printf("\nData:");
+    for (int i = 0; i < (txstruct.tts_data_lenght * 2); i++)
+    {
+        printf(" %X", test[i + 6]);
+    }
+    printf("\nData coded:");
+    for (int i = 0; i < txstruct.tts_data_lenght; i++)
+    {
+        printf(" %X", txstruct.tts_data[i]);
+    }
+    printf("\nData lenght: %d", txstruct.tts_data_lenght);
 }
 
 void TTS_test_structure_to_message_ts_no_data()
 {
-    char tts_message[TEST_BUF_MAX_LENGHT];
-    char tts_ad[2] = "25";
-    char tts_id[2] = "97";
-    char tts_data[TEST_BUF_MAX_LENGHT - 8];
+    message msg;
+    char buf[TEST_BUF_MAX_LENGHT];
+    size_t buf_lenght = 0;
+    txstructure txstruct;    
+    unsigned char tts_ad = 0x25;
+    unsigned char tts_id = 0x97;
+    unsigned char tts_data[TEST_BUF_MAX_LENGHT];
     size_t tts_data_lenght = 0;
-    size_t tts_message_lenght = 0;
-    int tts_need_crc = 1;
-    txstructure txstruct;
-    TTS_init(&txstruct, tts_message, tts_ad, tts_id, tts_data, tts_data_lenght, tts_message_lenght, tts_need_crc);
-    TTS_process_structure(&txstruct, tts_ad, tts_id, tts_data, tts_data_lenght, tts_need_crc);
-    TTS_print_structure(&txstruct);
+    int need_crc = 1;
+    TTS_init(&txstruct, tts_ad, tts_id, tts_data, tts_data_lenght);
+    TTS_message_init(&msg, buf, buf_lenght);
+    TTS_process_structure(&txstruct, &msg, need_crc);
+
+    printf("\nAD: %X", txstruct.tts_ad);
+    printf("\nID: %X", txstruct.tts_id);
+    printf("\nProcessed message: ");
+    for (int i = 0; i < msg.buf_lenght; i++)
+    {
+        printf("%c", msg.buf[i]);
+    }
 }
+
+void TTS_test_structure_to_message_ts_with_data()
+{
+    message msg;
+    char buf[TEST_BUF_MAX_LENGHT];
+    size_t buf_lenght = 0;
+    txstructure txstruct;    
+    unsigned char tts_ad = 0x25;
+    unsigned char tts_id = 0x97;
+    unsigned char tts_data[TEST_BUF_MAX_LENGHT] = {0x12, 0x34, 0x56, 0x78};
+    size_t tts_data_lenght = 4;
+    int need_crc = 1;
+    TTS_init(&txstruct, tts_ad, tts_id, tts_data, tts_data_lenght);
+    TTS_message_init(&msg, buf, buf_lenght);
+    TTS_process_structure(&txstruct, &msg, need_crc);
+
+    printf("\nAD: %X", txstruct.tts_ad);
+    printf("\nID: %X", txstruct.tts_id);
+    printf("\nData:");
+    for (int i = 0; i < txstruct.tts_data_lenght; i++)
+    {
+        printf(" %X", txstruct.tts_data[i]);
+    }
+    printf("\nData lenght: %d", txstruct.tts_data_lenght);
+    printf("\nProcessed message: ");
+    for (int i = 0; i < msg.buf_lenght; i++)
+    {
+        printf("%c", msg.buf[i]);
+    }
+}
+
+void TTS_test_structure_to_message_tx_no_data()
+{
+    message msg;
+    char buf[TEST_BUF_MAX_LENGHT];
+    size_t buf_lenght = 0;
+    txstructure txstruct;    
+    unsigned char tts_ad = 0x12;
+    unsigned char tts_id = 0x34;
+    unsigned char tts_data[TEST_BUF_MAX_LENGHT];
+    size_t tts_data_lenght = 0;
+    int need_crc = 0;
+    TTS_init(&txstruct, tts_ad, tts_id, tts_data, tts_data_lenght);
+    TTS_message_init(&msg, buf, buf_lenght);
+    TTS_process_structure(&txstruct, &msg, need_crc);
+
+    printf("\nAD: %X", txstruct.tts_ad);
+    printf("\nID: %X", txstruct.tts_id);
+    printf("\nProcessed message: ");
+    for (int i = 0; i < msg.buf_lenght; i++)
+    {
+        printf("%c", msg.buf[i]);
+    }
+}
+
+void TTS_test_structure_to_message_tx_with_data()
+{
+    message msg;
+    char buf[TEST_BUF_MAX_LENGHT];
+    size_t buf_lenght = 0;
+    txstructure txstruct;    
+    unsigned char tts_ad = 0x25;
+    unsigned char tts_id = 0x97;
+    unsigned char tts_data[TEST_BUF_MAX_LENGHT] = {0x45, 0x67, 0x89};
+    size_t tts_data_lenght = 3;
+    int need_crc = 0;
+    TTS_init(&txstruct, tts_ad, tts_id, tts_data, tts_data_lenght);
+    TTS_message_init(&msg, buf, buf_lenght);
+    TTS_process_structure(&txstruct, &msg, need_crc);
+
+    printf("\nAD: %X", txstruct.tts_ad);
+    printf("\nID: %X", txstruct.tts_id);
+    printf("\nData:");
+    for (int i = 0; i < txstruct.tts_data_lenght; i++)
+    {
+        printf(" %X", txstruct.tts_data[i]);
+    }
+    printf("\nData lenght: %d", txstruct.tts_data_lenght);
+    printf("\nProcessed message: ");
+    for (int i = 0; i < msg.buf_lenght; i++)
+    {
+        printf("%c", msg.buf[i]);
+    }
+}
+
+
+
+
 
 void main ()
 {
@@ -294,7 +386,7 @@ void main ()
     assert(incomplete_test() == OK);
     assert(overload_test() == OK);
 
-    printf("Tests for TTS: ");
+    printf("\nTests for TTS: ");
     TTS_test_ts_no_data();
     TTS_test_ts_with_data();
     TTS_test_tx_no_data();
