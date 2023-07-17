@@ -1,5 +1,7 @@
 #ifndef TX_SERVER
 #define TX_SERVER
+#include "data_to_tx.h"
+#include "tx_to_structure.h"
 typedef struct TxServer
 {
     char ad;

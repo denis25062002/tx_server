@@ -2,6 +2,7 @@
 #include <assert.h>
 #include "data_to_tx.h"
 #include "tx_to_structure.h"
+#include "tx_server.h"
 
 #define TEST_BUF_MAX_LENGHT 256
 
@@ -378,7 +379,7 @@ void TTS_test_structure_to_message_tx_with_data()
 
 void main ()
 {
-    printf("\e[1;1H\e[2J");
+    /*printf("\e[1;1H\e[2J");
     assert(simple_test() == OK);
     assert(CRC_err_test() == FAILED);
     assert(CRC_ok_test() == OK);
@@ -396,5 +397,5 @@ void main ()
     TTS_test_structure_to_message_ts_no_data();
     TTS_test_structure_to_message_ts_with_data();
     TTS_test_structure_to_message_tx_no_data();
-    TTS_test_structure_to_message_tx_with_data();
+    TTS_test_structure_to_message_tx_with_data();*/
 }

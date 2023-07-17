@@ -31,109 +31,9 @@ decoded_bytes* TTS_decode(unsigned char byte_to_decode)
     decoded_bytes decoded_bytes;
     char byte_temp[2];
     sprintf(byte_temp, "%X", byte_to_decode);
-    switch (byte_temp[0])
-        {
-            case '0':
-                decoded_bytes.byte_a = 0x30;
-                break;
-            case '1':
-                decoded_bytes.byte_a = 0x31;
-                break;
-            case '2':
-                decoded_bytes.byte_a = 0x32;
-                break;
-            case '3':
-                decoded_bytes.byte_a = 0x33;
-                break;
-            case '4':
-                decoded_bytes.byte_a = 0x34;
-                break;
-            case '5':
-                decoded_bytes.byte_a = 0x35;
-                break;
-            case '6':
-                decoded_bytes.byte_a = 0x36;
-                break;
-            case '7':
-                decoded_bytes.byte_a = 0x37;
-                break;
-            case '8':
-                decoded_bytes.byte_a = 0x38;
-                break;
-            case '9':
-                decoded_bytes.byte_a = 0x39;
-                break;
-            case 'A':
-                decoded_bytes.byte_a = 0x41;
-                break;
-            case 'B':
-                decoded_bytes.byte_a = 0x42;
-                break;
-            case 'C':
-                decoded_bytes.byte_a = 0x43;
-                break;
-            case 'D':
-                decoded_bytes.byte_a = 0x44;
-                break;
-            case 'E':
-                decoded_bytes.byte_a = 0x45;
-                break;
-            case 'F':
-                decoded_bytes.byte_a = 0x46;
-                break;
-        }
-    switch (byte_temp[1])
-        {
-            case '0':
-                decoded_bytes.byte_b = 0x30;
-                break;
-            case '1':
-                decoded_bytes.byte_b = 0x31;
-                break;
-            case '2':
-                decoded_bytes.byte_b = 0x32;
-                break;
-            case '3':
-                decoded_bytes.byte_b = 0x33;
-                break;
-            case '4':
-                decoded_bytes.byte_b = 0x34;
-                break;
-            case '5':
-                decoded_bytes.byte_b = 0x35;
-                break;
-            case '6':
-                decoded_bytes.byte_b = 0x36;
-                break;
-            case '7':
-                decoded_bytes.byte_b = 0x37;
-                break;
-            case '8':
-                decoded_bytes.byte_b = 0x38;
-                break;
-            case '9':
-                decoded_bytes.byte_b = 0x39;
-                break;
-            case 'A':
-                decoded_bytes.byte_b = 0x41;
-                break;
-            case 'B':
-                decoded_bytes.byte_b = 0x42;
-                break;
-            case 'C':
-                decoded_bytes.byte_b = 0x43;
-                break;
-            case 'D':
-                decoded_bytes.byte_b = 0x44;
-                break;
-            case 'E':
-                decoded_bytes.byte_b = 0x45;
-                break;
-            case 'F':
-                decoded_bytes.byte_b = 0x46;
-                break;
-        }
-        dcd_bts = &decoded_bytes;
+    decoded_bytes.byte_a = byte_temp[0];
+    decoded_bytes.byte_b = byte_temp[1];
+    dcd_bts = &decoded_bytes;
 }
 
 unsigned char TTS_code(char byte_1, char byte_2)
@@ -155,19 +55,10 @@ static void TTS_make_crc(message* msg)
     {
         crc_counted = crc_counted ^ msg->buf[i];
     }
-    sprintf(crc_temp, "%X", crc_counted);
+    sprintf(crc_temp, "%02X", crc_counted);
     msg->buf_lenght = msg->buf_lenght + 2;
-
-    if (crc_counted < 16)
-    {
-        msg->buf[msg->buf_lenght - 2] = '0';
-        msg->buf[msg->buf_lenght - 1] = crc_temp[0];    
-    }
-    else 
-    {
-        msg->buf[msg->buf_lenght - 2] = crc_temp[0];
-        msg->buf[msg->buf_lenght - 1] = crc_temp[1];
-    }
+    msg->buf[msg->buf_lenght - 2] = crc_temp[0];
+    msg->buf[msg->buf_lenght - 1] = crc_temp[1];
 }
 
 void TTS_process_message(txstructure* txstruct, char* buf, size_t lenght)
