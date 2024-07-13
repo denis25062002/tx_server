@@ -1,7 +1,0 @@
-{
-    "files.associations": {
-        "stdio.h": "c",
-        "tx_server.h": "c",
-        "data_to_tx.h": "c"
-    }
-}
