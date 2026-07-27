@@ -1,6 +1,6 @@
 # Embedded TX Protocol Parser
 
-> **A lightweight, robust C library for parsing, validating, and handling custom text-based communication protocols over UART/RS-232/RS-485 interfaces.**
+**A lightweight, robust C library for parsing, validating, and handling custom text-based communication protocols over UART/RS-232/RS-485 interfaces.**
 
 
 ---
